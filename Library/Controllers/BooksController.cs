@@ -54,6 +54,13 @@ namespace Library.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Book>>> GetBooks(int autherId, int pageNumber = 1, int pageSize = 10)
         {
+            var auther = await autherRepository.GetByIdAsync(autherId);
+
+            if (auther == null)
+            {
+                return NotFound();
+            }
+
             var (books, paginationData) = await bookRepository.GetAllAsync(pageNumber, pageSize, (e => e.AutherId == autherId));
 
             Response.Headers.Add("X-pagination", JsonSerializer.Serialize(paginationData));
