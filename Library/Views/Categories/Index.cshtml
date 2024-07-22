@@ -1,0 +1,45 @@
+﻿@model Library.Models.ViewModels.CategoryViewModel
+
+@{
+    ViewData["Title"] = "Categories";
+}
+
+@section Scripts {
+    <script>
+        document.getElementById('mainCategory').addEventListener('change', function () {
+            var mainCategory = this.value;
+            var subCategories = @Html.Raw(Json.Serialize(Model.MainCategoriesWithSubCategories));
+
+            var subCategoryDropdown = document.getElementById('subCategory');
+            subCategoryDropdown.innerHTML = '<option value="">Select SubCategory</option>';
+
+            if (subCategories[mainCategory]) {
+                subCategories[mainCategory].forEach(function (subCategory) {
+                    var option = document.createElement('option');
+                    option.value = subCategory;
+                    option.text = subCategory;
+                    subCategoryDropdown.add(option);
+                });
+            }
+        });
+    </script>
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-6">
+            <select id="mainCategory" class="form-select btn btn-primary">
+                <option value="">Select Main Category</option>
+                @foreach (var mainCategory in Model.MainCategoriesWithSubCategories.Keys)
+                {
+                    <option value="@mainCategory">@mainCategory</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-6">
+            <select id="subCategory" class="form-select btn btn-warning">
+                <option value="">Select SubCategory</option>
+            </select>
+        </div>
+    </div>
+</div>

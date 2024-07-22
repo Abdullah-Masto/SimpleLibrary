@@ -1,0 +1,49 @@
+-- Authers Table
+
+-- Add 
+insert into Authers (Name,BirthDate,Biography,IsDeleted) values 
+( 'Ahmad Mohammad','1991-2-20','a professional Software engineer','false'),
+( 'Mohammad Ali','1984-6-14','a professional webdeveloper','false');
+
+-- Get by Id
+select * from Authers
+where Id=1;
+
+-- Get All
+select * from Authers;
+
+-- Update by Id
+Update Authers
+set Name = 'Abdulrahman Ali'
+where Id = 2;
+
+-- Soft Delete
+Update Authers
+set IsDeleted = 'true'
+where Id = 1;
+
+
+-- Books Table
+
+-- Add 
+insert into Books AutherId,Pages,Language,Price,MainCategory,SubCategory,IsDeleted) values 
+( 'Learn C#','2020-2-2',2,330,'ar',88.9,'Coding','C#','false'),
+( 'Learn Python','2023-3-3',2,290,'en',77.9,'Coding','Python','false');
+
+-- Get by Id
+select * from Books
+where Id=1;
+
+-- Get All
+select * from Books;
+
+-- Update by Id
+Update Books
+set Title = 'Learn JavaScript'
+where Id = 2;
+
+-- Soft Delete
+Update Books
+set IsDeleted = 'true'
+where Id = 1;
+
