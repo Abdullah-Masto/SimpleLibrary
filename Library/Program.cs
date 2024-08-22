@@ -18,10 +18,11 @@ builder.Services.AddControllers(options =>
 builder.Services.AddDbContext<LibraryContext>(
     options => options.UseSqlServer(builder.Configuration["ConnectionStrings:LibraryDbConnectionString"]));
 
-builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-
 // Register the HttpClient and StackOverflowService
 builder.Services.AddHttpClient<StackOverflowService>();
+
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+
 
 // Add controllers with views (includes API controllers)
 builder.Services.AddControllersWithViews();
@@ -39,8 +40,20 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// Common error handling and security headers for all environments
-app.UseExceptionHandler("/Home/Error");
+//
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+}
+else
+{
+    app.UseExceptionHandler("/Home/Error");
+    app.UseHsts();
+}
+
+Console.WriteLine(app.Environment.EnvironmentName);
+
 app.UseHsts();
 
 app.UseHttpsRedirection();

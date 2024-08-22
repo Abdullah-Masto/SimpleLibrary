@@ -16,8 +16,16 @@ namespace SimpleLibrary.Services
 
         public async Task<List<Question>> GetRecentQuestionsAsync()
         {
-            var response = await _httpClient.GetAsync("https://api.stackexchange.com/2.3/questions?order=desc&sort=activity&site=stackoverflow&pagesize=50");
-            response.EnsureSuccessStatusCode();
+            var request = new HttpRequestMessage(HttpMethod.Get, "https://api.stackexchange.com/2.3/questions?order=desc&sort=activity&site=stackoverflow&pagesize=50");
+            request.Headers.Add("User-Agent", "SimpleLibrary");
+
+            var response = await _httpClient.SendAsync(request);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                throw new HttpRequestException($"Request failed with status code {response.StatusCode}: {errorContent}");
+            }
 
             var jsonString = await response.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<ApiResult>(jsonString);
@@ -25,9 +33,14 @@ namespace SimpleLibrary.Services
             return result.Items;
         }
 
+
+
         public async Task<Question> GetQuestionDetailsAsync(int questionId)
         {
-            var response = await _httpClient.GetAsync($"https://api.stackexchange.com/2.3/questions/{questionId}?order=desc&sort=activity&site=stackoverflow&filter=withbody");
+            var request = new HttpRequestMessage(HttpMethod.Get, $"https://api.stackexchange.com/2.3/questions/{questionId}?order=desc&sort=activity&site=stackoverflow&filter=withbody");
+            request.Headers.Add("User-Agent", "SimpleLibrary");
+
+            var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
 
             var jsonString = await response.Content.ReadAsStringAsync();
